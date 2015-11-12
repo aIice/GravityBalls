@@ -1,38 +1,71 @@
-//declare variables
-float x, y, velX, velY, diam;
+int count = 30; //number of balls
+
+//array variables
+float[] x = new float[count];
+float[] y = new float[count];
+float[] velX = new float[count];
+float[] velY = new float[count];
+float[] diam = new float[count];
+
+//to make random colours
+float[] r = new float[count];
+float[] g = new float[count];
+float[] b = new float[count];
+
+float gravity = .5; //gravity
 
 void setup() {
-  //set size of canvas
   size(800, 600);
-
-  //initialize variables
-  x = width/2;
-  y = height/2;
-  diam = 80;
-  velX = random(-5, 5);
-  velY = random(-5, 5);
+  
+  int i = 0;
+  
+  //while loop to define variables
+  while (i < count) {
+    x[i] = width/2;
+    y[i] = random(0,height/2);
+    velX[i] = random(-2,2);
+    velY[i] = 0;
+    diam[i] = random(40,80);
+    
+    r[i] = random(100,220);
+    g[i] = random(100,220);
+    b[i] = random(100,220);
+    
+    i++;
+  }
 }
 
 void draw() {
-  //draw background to cover previous frame
   background(0);
-
-  //draw ball
-  ellipse(x, y, diam, diam);
-
-  //add velocity to position
-  x += velX;
-  y += velY;
-
-  //bounce ball if it hits walls
-  if (x + diam/2 >= width) {
-    velX = -abs(velX);    //if the ball hits the right wall, assign x velocity the negative version of itself
-  } else if (x - diam/2 <= 0) {
-    velX = abs(velX);     //if the ball hits the left wall, assign x velocity the positive version of itself
-  }
-  if (y + diam/2 >= height) {
-    velY = -abs(velY);
-  } else if (y - diam/2 <= 0) {
-    velY = abs(velY);
+  
+  int i = 0;
+  
+  //while loop to make balls
+  while (i < count) {
+    fill(r[i],g[i],b[i],180);
+    noStroke();
+    ellipse(x[i],y[i],diam[i],diam[i]);
+    
+    //x,y positions
+    x[i] += velX[i];
+    y[i] += velY[i];
+    
+    //velocity accelerates with gravity
+    velY[i] += gravity;
+    
+    //bounce off edges of screen
+    if (x[i] + diam[i]/2 >= width) {
+      velX[i] = -abs(velX[i]);
+    } else if (x[i] - diam[i]/2 <= 0) {
+      velX[i] = abs(velX[i]);
+    }
+    
+    if (y[i] + diam[i]/2 >= height) {
+      velY[i] = -abs(velY[i] - gravity);
+    } else if (y[i] + diam[i]/2 <= 0) {
+      velY[i] = abs(velY[i]);
+    }
+    
+    i++;
   }
 }
